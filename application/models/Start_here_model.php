@@ -27,9 +27,14 @@
                 //https://tutorials.kode-blog.com/codeigniter-model
                 $my_model = fopen($path_model, "w+") or die($k.'. Unable to write the file: '. $name_model.'.php <br>');
                 $model_template = "<?php (defined('BASEPATH')) OR exit('No direct script access allowed');
+                /*
+                    Generate on ".date('d/m/Y H:i:s')."
+                    Author by Daniel Naranjo
+                    www.loultimoenlaweb.com
 
+                    ".json_encode($response['table'][$k][$v], JSON_PRETTY_PRINT)."
+                */
                     class $name_model extends CI_Model {
-
                         public function __construct() {
                             \$this->load->database();
                         }
@@ -45,11 +50,12 @@
                             \$query = \$this->db->field_data('".$v."');
                             return \$query;
                         }
-                        public function lista(\$id){
+                        public function obtener(\$id){
                             \$query = \$this->db->get_where('".$v."', array('".$v."_id' => \$id));
                             return \$query->result_array();
                         }
                         public function registrar(\$data){
+                            unset(\$data['Submit']); // <- Remove garbage POST array!
                             \$query = \$this->db->insert('".$v."', \$data);
                             return \$data;
                         }
@@ -61,30 +67,33 @@
                             \$this->db->where('".$v."_id', \$id);
                             \$this->db->delete('".$v."');
                         }
-
-                    }
+                    }//end
                 ";
                 fwrite($my_model, $model_template);
                 fclose($my_model);
 
                 $my_controller = fopen($path_controller, "w+") or die($k.'. Unable to write the file: '. $name_controller.'.php <br>');
                 $controller_template = "<?php
-                    class ".$name_controller." extends CI_Controller {
-
+                /*
+                    Generate on ".date('d/m/Y H:i:s')."
+                    Author by Daniel Naranjo
+                    www.loultimoenlaweb.com
+                */
+                class ".$name_controller." extends CI_Controller {
                     public function __construct() {
                         parent::__construct();
                         \$this->load->model('".$name_model."');
                     }
-                    public function index(\$id){
-                        \$data = \$this->".$name_model."->listar(\$id);//AQUI
+                    public function index(\$id=FALSE){
+                        \$data = \$this->".$name_model."->listar(\$id);
+                        echo json_encode(\$data);
+                    }
+                    public function view(\$id){
+                        \$data = \$this->".$name_model."->obtener(\$id);
                         echo json_encode(\$data);
                     }
                     public function add(){
-                        //TODO LIST
-                        \$data = array(
-                            'Audio_id' => \$this->input->post(\"".$v."_id\"),
-                        );
-                        \$data = \$this->".$name_model."->registrar(\$data);
+                        \$data = \$this->".$name_model."->registrar(\$this->input->post(NULL, TRUE));
                         if(\$data){
                             echo json_encode(\$data);
                         }
@@ -94,23 +103,15 @@
                         echo json_encode(\$data);
                     }
                     public function update(){
-                        //TODO LIST
                         \$id = \$this->input->post(\"".$v."_id\");
-                        \$data = array(
-                            'note' => \$this->input->post(\"note\"),
-                        );
+                        \$data = \$this->input->post(NULL, TRUE);
                         \$res = \$this->".$name_model."->updatear(\$id, \$data);
                         echo json_encode(\$res);
                     }
+                }//end
                 ";
                 fwrite($my_controller, $controller_template);
                 fclose($my_controller);
-
-                //if ( ! write_file($path, $k[$v] )) {
-                //    echo $k.'. Unable to write the file: '. ucfirst ($v).'_model.php <br>';
-                //} else {
-                //    $response['table'][$k][$v] = $this->db->field_data($v);
-                //}
             }
             return $response;
         }
