@@ -38,20 +38,20 @@
                         public function __construct() {
                             \$this->load->database();
                         }
-                        public function listar(\$id = FALSE){
-                            if (\$id === FALSE) {
-                                    \$query = \$this->db->get('".$v."');
-                                    return \$query->result_array();
+                        public function listar(\$".$v."_id = FALSE){
+                            if (\$".$v."_id === FALSE) {
+                                \$query = \$this->db->get('".$v."');
+                                return \$query->result_array();
                             }
-                            \$query = \$this->db->get_where('".$v."', array('".$v."_id' => \$id));
+                            \$query = \$this->db->get_where('".$v."', array('".$v."_id' => \$".$v."_id));
                             return \$query->row_array();
                         }
                         public function columnas(){
                             \$query = \$this->db->field_data('".$v."');
                             return \$query;
                         }
-                        public function obtener(\$id){
-                            \$query = \$this->db->get_where('".$v."', array('".$v."_id' => \$id));
+                        public function obtener(\$".$v."id){
+                            \$query = \$this->db->get_where('".$v."', array('".$v."_id' => \$".$v."_id));
                             return \$query->result_array();
                         }
                         public function registrar(\$data){
@@ -59,12 +59,12 @@
                             \$query = \$this->db->insert('".$v."', \$data);
                             return \$data;
                         }
-                        public function updatear(\$id, \$data){
-                            \$this->db->where('".$v."_id', \$id);
+                        public function updatear(\$".$v."_id, \$data){
+                            \$this->db->where('".$v."_id', \$".$v."_id);
                             \$this->db->update('".$v."', \$data);
                         }
-                        public function deletear(\$id){
-                            \$this->db->where('".$v."_id', \$id);
+                        public function deletear(\$".$v."_id){
+                            \$this->db->where('".$v."_id', \$".$v."_id);
                             \$this->db->delete('".$v."');
                         }
                     }//end
@@ -84,12 +84,12 @@
                         parent::__construct();
                         \$this->load->model('".$name_model."');
                     }
-                    public function index(\$id=FALSE){
-                        \$data = \$this->".$name_model."->listar(\$id);
+                    public function index(\$".$v."_id=FALSE){
+                        \$data = \$this->".$name_model."->listar(\$".$v."_id);
                         echo json_encode(\$data);
                     }
-                    public function view(\$id){
-                        \$data = \$this->".$name_model."->obtener(\$id);
+                    public function view(\$".$v."_id){
+                        \$data = \$this->".$name_model."->obtener(\$".$v."_id);
                         echo json_encode(\$data);
                     }
                     public function add(){
@@ -98,14 +98,14 @@
                             echo json_encode(\$data);
                         }
                     }
-                    public function delete(\$id){
-                        \$data = \$this->".$name_model."->deletear(\$id);
+                    public function delete(\$".$v."_id){
+                        \$data = \$this->".$name_model."->deletear(\$".$v."_id);
                         echo json_encode(\$data);
                     }
                     public function update(){
-                        \$id = \$this->input->post(\"".$v."_id\");
+                        \$".$v."_id = \$this->input->post(\"".$v."_id\");
                         \$data = \$this->input->post(NULL, TRUE);
-                        \$res = \$this->".$name_model."->updatear(\$id, \$data);
+                        \$res = \$this->".$name_model."->updatear(\$".$v."_id, \$data);
                         echo json_encode(\$res);
                     }
                 }//end
