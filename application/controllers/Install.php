@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Start_here extends CI_Controller {
+class Install extends CI_Controller {
 
 	/**
 	 * Index Page for this controller.
@@ -21,11 +21,18 @@ class Start_here extends CI_Controller {
 
     public function __construct(){
         parent::__construct();
-        $this->load->model('Start_here_model');
+        $this->load->model('Install_model');
+        $this->load->helper('url');
+        $this->load->helper('file');
+        $this->load->library('parser');
     }
 
     public function index(){
-        $data = $this->Start_here_model->hacer();
-        echo json_encode($data);
+        $data = $this->Install_model->makeit();
+        // Remove controller/model
+        @unlink(APPPATH . 'models/Install_model.php', true);
+        @unlink(APPPATH . 'controllers/Install.php', true);
+        redirect('/completed', 'location');
+        //echo json_encode($data);
     }
 }
