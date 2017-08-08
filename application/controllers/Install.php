@@ -30,9 +30,9 @@ class Install extends CI_Controller {
     public function index(){
         $data = $this->Install_model->makeit();
         // Remove controller/model
-        @unlink(APPPATH . 'models/Install_model.php', true);
-        @unlink(APPPATH . 'controllers/Install.php', true);
-        redirect('/completed', 'location');
-        //echo json_encode($data);
+        unlink(APPPATH . 'models/Install_model.php');
+        unlink(APPPATH . 'controllers/Install.php');
+        // Confirmation
+        redirect(base_url().'index.php/welcome/completed', 'location');
     }
 }
