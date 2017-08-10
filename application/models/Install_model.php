@@ -26,6 +26,7 @@
                 $path_controller=APPPATH . 'controllers/'.$name_controller.'.php';
 
                 $path_routes=APPPATH . 'controllers/api/';
+                $yaml_routes=APPPATH . '';
 
                 //https://tutorials.kode-blog.com/codeigniter-model
                 $my_model = fopen($path_model, "w+") or die($k.'. Unable to write the file: '. $name_model.'.php <br>');
@@ -69,6 +70,28 @@
                         public function deletear(\$".$v."_id){
                             \$this->db->where('".$v."_id', \$".$v."_id);
                             \$this->db->delete('".$v."');
+                        }
+                        public function joinear(\$".$v."_id){
+                            \$this->db->select('*');
+                            \$this->db->from('".$v."');
+                            \$this->db->join('".$v."','','left');
+                            \$this->db->where('".$v."_id', \$".$v."_id);
+                            \$query = \$this->db->get();
+                            return \$query->row_array();
+                        }
+                        public function uploadear(\$".$v."_id = NULL) {
+                            \$config['upload_path'] = './folder/';
+                            \$config['allowed_types'] = 'gif|jpg|png|pdf';
+                            \$config['max_size'] = 1000;
+                            \$config['max_width'] = 2048;
+                            \$config['max_height'] = 2048;
+                            \$this->load->library('upload', \$config);
+                            if (!\$this->upload->do_upload('file')) {
+                                \$error = array('error' => \$this->upload->display_errors());
+                                echo json_encode(\$error);
+                            } else  {
+                                echo json_encode(\$data);
+                            }
                         }
                     }//end
                 ";
@@ -156,6 +179,13 @@
                 ";
                 fwrite($my_api, $api_template);
                 fclose($my_api);
+
+                // $yaml = fopen($yaml_routes.$v.".yml", "w+") or die($k.'. Unable to write the file: '. $yaml_routes.$v.'.yml <br>');
+                // $yaml_template = "
+                //
+                // ";
+                // fwrite($yaml, $yaml_template);
+                // fclose($yaml);
             }
             return $response;
         }//makeit
