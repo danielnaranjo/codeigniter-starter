@@ -26,7 +26,7 @@
                 $path_controller=APPPATH . 'controllers/'.$name_controller.'.php';
 
                 $path_routes=APPPATH . 'controllers/api/';
-                $yaml_routes=APPPATH . '';
+                $yaml_routes=APPPATH . '/';
 
                 //https://tutorials.kode-blog.com/codeigniter-model
                 $my_model = fopen($path_model, "w+") or die($k.'. Unable to write the file: '. $name_model.'.php <br>');
@@ -79,20 +79,6 @@
                             \$query = \$this->db->get();
                             return \$query->row_array();
                         }
-                        public function uploadear(\$".$v."_id = NULL) {
-                            \$config['upload_path'] = './folder/';
-                            \$config['allowed_types'] = 'gif|jpg|png|pdf';
-                            \$config['max_size'] = 1000;
-                            \$config['max_width'] = 2048;
-                            \$config['max_height'] = 2048;
-                            \$this->load->library('upload', \$config);
-                            if (!\$this->upload->do_upload('file')) {
-                                \$error = array('error' => \$this->upload->display_errors());
-                                echo json_encode(\$error);
-                            } else  {
-                                echo json_encode(\$data);
-                            }
-                        }
                     }//end
                 ";
                 fwrite($my_model, $model_template);
@@ -133,6 +119,23 @@
                         \$data = \$this->input->post(NULL, TRUE);
                         \$res = \$this->".$name_model."->updatear(\$".$v."_id, \$data);
                         echo json_encode(\$res);
+                    }
+                    public function upload(\$".$v."_id = NULL) {
+                        \$config['upload_path'] = './folder/';
+                        \$config['allowed_types'] = 'gif|jpg|png|pdf';
+                        \$config['max_size'] = 1000;
+                        \$config['max_width'] = 2048;
+                        \$config['max_height'] = 2048;
+                        \$this->load->library('upload', \$config);
+                        if (!\$this->upload->do_upload('file')) {
+                            \$error = array('error' => \$this->upload->display_errors());
+                            echo json_encode(\$error);
+                        } else  {
+                            \$data = \$this->".$name_model."->registrar(\$this->input->post(NULL, TRUE));
+                            if(\$data){
+                                echo json_encode(\$data);
+                            }
+                        }
                     }
                 }//end
                 ";
@@ -181,10 +184,8 @@
                 fclose($my_api);
 
                 // $yaml = fopen($yaml_routes.$v.".yml", "w+") or die($k.'. Unable to write the file: '. $yaml_routes.$v.'.yml <br>');
-                // $yaml_template = "
-                //
-                // ";
-                // fwrite($yaml, $yaml_template);
+                // $yaml_template = $response['table'][$k][$v];
+                // fwrite($yaml, json_encode($yaml_template, JSON_PRETTY_PRINT));
                 // fclose($yaml);
             }
             return $response;

@@ -24,6 +24,7 @@ class Welcome extends CI_Controller {
          $this->load->helper('url');
          $this->load->helper('file');
          $this->load->library('parser');
+         $this->load->model('Test_model');
      }
 	public function index()
 	{
@@ -43,10 +44,16 @@ class Welcome extends CI_Controller {
             <ul>
             <li>Install is removed (controllers, models, views)</li>
             <li>Welcome is removed (controllers, models, views)</li>
+            <li><a href="'.base_url().'index.php/generate">Generate Swagger Specs</a></li>
             </ul>
             <p>All script will generated with table name (ex. user or news) and installations script will be removed.</p>
             <p>If you are exploring CodeIgniter for the very first time, you should start by reading the <a href="user_guide/">User Guide</a>.</p>
         </div>';
         $this->load->view('welcome_message', $data);
+    }
+    public function test(){
+        $data['msg'] = $this->Test_model->yaml();
+        //$this->load->view('welcome_message', $data);
+        echo $data['msg'];
     }
 }
