@@ -28,7 +28,7 @@ class Install extends CI_Controller {
     }
 
     public function index(){
-        $data = $this->Install_model->makeit();
+        $data = $this->Install_model->setup();
         // Remove controller/model
         //@unlink(APPPATH . 'models/Install_model.php');
         //@unlink(APPPATH . 'controllers/Install.php');
